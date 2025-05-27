@@ -69,6 +69,17 @@ export default function TaskBoard() {
     setTasks(newTasks);
   }
 
+  function handleSearch(searchTerm) {
+    console.log(searchTerm);
+
+    // tasks array ke boltesi je tmi tmr prottekta task element er title er lowercase e dekho je amr searchTerm er lowercase ta ke contain kore ki na. Jeshob item contain kore, tader notun searchedItems array te return kore dao.
+    const searchedItems = tasks.filter((task) =>
+      task.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    setTasks([...searchedItems]);
+  }
+
   return (
     <section className="mb-20" id="tasks">
       {showAddModal && (
@@ -80,7 +91,7 @@ export default function TaskBoard() {
       )}
       <div className="container">
         <div className="p-2 flex justify-end">
-          <SearchTask />
+          <SearchTask onSearch={handleSearch} />
         </div>
 
         <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
@@ -89,12 +100,18 @@ export default function TaskBoard() {
             onDeleteAllClick={handleDeleteAllClick}
           />
 
-          <TaskList
-            tasks={tasks}
-            onEdit={handleEditTask}
-            onDelete={handleDeleteTask}
-            onFav={handleFavorite}
-          />
+          {tasks.length > 0 ? (
+            <TaskList
+              tasks={tasks}
+              onEdit={handleEditTask}
+              onDelete={handleDeleteTask}
+              onFav={handleFavorite}
+            />
+          ) : (
+            <h2 className="text-center text-2xl text-white/70 mt-4">
+              No tasks added.
+            </h2>
+          )}
         </div>
       </div>
     </section>
