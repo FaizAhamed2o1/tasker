@@ -19,9 +19,19 @@ export default function TaskBoard() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [taskToUpdate, setTaskToUpdate] = useState(null);
 
-  function handleAddTask(newTask) {
-    console.log("Button clicked", newTask);
-    setTasks([...tasks, newTask]);
+  function handleAddEditTask(newTask, isAdd) {
+    if (isAdd) {
+      setTasks([...tasks, newTask]);
+    } else {
+      setTasks(
+        tasks.map((task) => {
+          if (task.id === newTask.id) {
+            return newTask;
+          }
+          return task;
+        })
+      );
+    }
     setShowAddModal(false);
   }
 
@@ -30,10 +40,19 @@ export default function TaskBoard() {
     setShowAddModal(true);
   }
 
+  function handleCloseModal() {
+    setShowAddModal(false);
+    setTaskToUpdate(null);
+  }
+
   return (
     <section className="mb-20" id="tasks">
       {showAddModal && (
-        <AddTaskModal onSave={handleAddTask} taskToUpdate={taskToUpdate} />
+        <AddTaskModal
+          onSave={handleAddEditTask}
+          taskToUpdate={taskToUpdate}
+          onCloseClick={handleCloseModal}
+        />
       )}
       <div className="container">
         <div className="p-2 flex justify-end">
