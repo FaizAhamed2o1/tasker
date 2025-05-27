@@ -45,6 +45,30 @@ export default function TaskBoard() {
     setTaskToUpdate(null);
   }
 
+  function handleDeleteTask(taskId) {
+    const tasksAfterDeletion = tasks.filter((task) => task.id !== taskId);
+    setTasks(tasksAfterDeletion);
+  }
+
+  function handleDeleteAllClick() {
+    tasks.length = 0;
+    setTasks([...tasks]);
+  }
+
+  function handleFavorite(taskId) {
+    // First e amra amader tasks array theke taskId (jei ta amader function er parameter theke ashtese) er index ta ber korbo.
+    const taskIndex = tasks.findIndex((task) => task.id === taskId);
+
+    // ekhon amra existing task er ekta copy banabo jeno oitake amra mutate korte pari.
+    const newTasks = [...tasks];
+
+    // ekhon amra 'newTask' array er specific oi index er object ta ke dhorbo jeitar index amra ber korsilam ar tar "isFavorite" property ta ke amra toggle krbo.
+    newTasks[taskIndex].isFavorite = !newTasks[taskIndex].isFavorite;
+
+    // finally amra newTasks array ta ke setTasks er moddhe set kore dibo
+    setTasks(newTasks);
+  }
+
   return (
     <section className="mb-20" id="tasks">
       {showAddModal && (
@@ -60,9 +84,17 @@ export default function TaskBoard() {
         </div>
 
         <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
-          <TaskActions onAddClick={() => setShowAddModal(true)} />
+          <TaskActions
+            onAddClick={() => setShowAddModal(true)}
+            onDeleteAllClick={handleDeleteAllClick}
+          />
 
-          <TaskList tasks={tasks} onEdit={handleEditTask} />
+          <TaskList
+            tasks={tasks}
+            onEdit={handleEditTask}
+            onDelete={handleDeleteTask}
+            onFav={handleFavorite}
+          />
         </div>
       </div>
     </section>
